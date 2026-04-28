@@ -64,6 +64,12 @@
     }
   }
 
+  // Alterna favorito a través del store
+  async function handleToggleFavorite(id: string) {
+    moviesStore.clearError();
+    await moviesStore.toggleFavorite(id);
+  }
+
   // Elimina película a través del store
   async function handleDelete(id: string) {
     feedbackMessage = null;

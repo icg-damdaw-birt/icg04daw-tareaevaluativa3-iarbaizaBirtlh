@@ -83,6 +83,43 @@ export const moviesStore = {
     }
   },
 
+  // Alternar favorito
+  async toggleFavorite(id: string): Promise<boolean> {
+    mutating = true;
+    error = null;
+    try {
+      const updatedMovie = await api.toggleFavorite(id);
+      movies = movies.map(m => m.id === id ? updatedMovie : m);
+      return true;
+    } catch (err) {
+      error = err instanceof Error ? err.message : 'Error al actualizar favorito';
+      return false;
+    } finally {
+      mutating = false;
+    }
+  },
+
+  async rateMovie(movie: Movie, rating: number) {
+    // VALIDACIÓN
+    if (rating < 0 || rating > 5) {
+      error = 'Rating inválido';
+      return;
+    }
+
+    const previous = movie.rating;
+
+    // OPTIMISTIC UPDATE
+    movie.rating = rating;
+
+    try {
+      await api.rateMovie(movie.id, rating);
+    } catch (e) {
+      // ROLLBACK
+      movie.rating = previous;
+      error = 'No se pudo guardar el rating';
+    }
+  },
+
   // Limpiar estado completo
   reset() {
     movies = [];
