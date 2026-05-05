@@ -47,6 +47,17 @@
       {#if movie.year}
         <span>Año: {movie.year}</span>
       {/if}
+      <!-- Rating estrellas -->
+      <div class="mt-2 flex gap-1">
+        {#each [1,2,3,4,5] as star}
+          <span
+            class={star <= (movie.rating ?? 0) ? 'text-yellow-400 cursor-pointer' : 'text-gray-300 cursor-pointer'}
+            onclick={() => moviesStore.rateMovie(movie, star)}
+          >
+            {star <= (movie.rating ?? 0) ? '⭐' : '☆'}
+          </span>
+        {/each}
+      </div>
     </div>
 
     {#if showActions}
